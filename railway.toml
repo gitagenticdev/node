@@ -6,3 +6,5 @@ dockerfilePath = "Dockerfile"
 healthcheckPath = "/health"
 healthcheckTimeout = 10
 restartPolicyType = "always"
+numReplicas = 3
+multiRegion = true

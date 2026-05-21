@@ -17,14 +17,46 @@ import (
 )
 
 var (
-	nodeName   = os.Getenv("NODE_NAME")
-	nodeRegion = os.Getenv("NODE_REGION")
-	nodeFlag   = os.Getenv("NODE_FLAG")
+	nodeName   string
+	nodeRegion string
+	nodeFlag   string
 	peers      = strings.Split(os.Getenv("PEERS"), ",")
 	nodeDID    string
 	nodeKey    ed25519.PrivateKey
 	version    = "0.3.8"
 )
+
+func init() {
+	// Auto-detect from Railway region
+	railwayRegion := os.Getenv("RAILWAY_REGION")
+	switch railwayRegion {
+	case "us-east4", "us-east1":
+		nodeName = "node.gitagentic.dev"
+		nodeRegion = "US-EAST"
+		nodeFlag = "🇺🇸"
+	case "europe-west4", "europe-west1":
+		nodeName = "node2.gitagentic.dev"
+		nodeRegion = "EU-WEST"
+		nodeFlag = "🇪🇺"
+	case "asia-southeast1", "asia-northeast1":
+		nodeName = "node3.gitagentic.dev"
+		nodeRegion = "AP-TOKYO"
+		nodeFlag = "🇯🇵"
+	default:
+		nodeName = os.Getenv("NODE_NAME")
+		nodeRegion = os.Getenv("NODE_REGION")
+		nodeFlag = os.Getenv("NODE_FLAG")
+		if nodeName == "" {
+			nodeName = "node.gitagentic.dev"
+		}
+		if nodeRegion == "" {
+			nodeRegion = "US-EAST"
+		}
+		if nodeFlag == "" {
+			nodeFlag = "🇺🇸"
+		}
+	}
+}
 
 // In-memory state
 var state = &nodeState{
