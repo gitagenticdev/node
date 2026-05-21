@@ -27,46 +27,17 @@ var (
 )
 
 func init() {
-	// Auto-detect from Railway
-	railwayRegion := os.Getenv("RAILWAY_REGION")
-	replicaID := os.Getenv("RAILWAY_REPLICA_ID")
-
-	// Determine which node this replica is based on replica ID
-	replicaNum := 0
-	if len(replicaID) > 0 {
-		// Use last char of replica ID to determine node number
-		replicaNum = int(replicaID[len(replicaID)-1]) % 3
-	}
-
-	switch replicaNum {
-	case 0:
+	nodeName = os.Getenv("NODE_NAME")
+	nodeRegion = os.Getenv("NODE_REGION")
+	nodeFlag = os.Getenv("NODE_FLAG")
+	if nodeName == "" {
 		nodeName = "node.gitagentic.dev"
+	}
+	if nodeRegion == "" {
 		nodeRegion = "US-EAST"
+	}
+	if nodeFlag == "" {
 		nodeFlag = "🇺🇸"
-	case 1:
-		nodeName = "node2.gitagentic.dev"
-		nodeRegion = "EU-WEST"
-		nodeFlag = "🇪🇺"
-	case 2:
-		nodeName = "node3.gitagentic.dev"
-		nodeRegion = "AP-TOKYO"
-		nodeFlag = "🇯🇵"
-	}
-
-	// Override with explicit env if set
-	if v := os.Getenv("NODE_NAME"); v != "" {
-		nodeName = v
-	}
-	if v := os.Getenv("NODE_REGION"); v != "" {
-		nodeRegion = v
-	}
-	if v := os.Getenv("NODE_FLAG"); v != "" {
-		nodeFlag = v
-	}
-
-	// If Railway region is set, use it for display
-	if railwayRegion != "" && os.Getenv("NODE_REGION") == "" {
-		nodeRegion = railwayRegion
 	}
 }
 
